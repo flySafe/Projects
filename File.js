@@ -7,9 +7,8 @@ function FlightGetRequest(CountryDeparture,CountryArrival,DayDep,MonthDep,YearDe
             headers: { 'apikey': 'm42o4XvdEakkDwDvAsA8KKdheODJQQNX' }
         };
 
-        let content = new Promise((resolve) => {
-                resolve(axios.get(url,config))
-            })
+        let content = new Promise((resolve,error) => {
+                resolve(axios.get(url,config))})
         return content
     } catch (error) {
         console.error(error);
@@ -19,8 +18,10 @@ function FlightGetRequest(CountryDeparture,CountryArrival,DayDep,MonthDep,YearDe
 async function GetPrice (CountryDeparture,CountryArrival,DayDep,MonthDep,YearDep,DayBack,MonthBack,YearBack) {
     const buffer = await FlightGetRequest(CountryDeparture,CountryArrival,DayDep,MonthDep,YearDep,DayBack,MonthBack,YearBack)
     let FlightPrice = buffer.data.data[0]['price']
-    console.log(FlightPrice)
+    return FlightPrice
 }
 
-var x = GetPrice('IL','DE','03','05','2020','05','05','2020')
-console.log(x)
+(async () => {
+    var x = await GetPrice('IL','DE','03','05','2020','05','05','2020')
+    console.log(x)
+})()
