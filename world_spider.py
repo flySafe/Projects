@@ -10,8 +10,9 @@ class WorldSpiderSpider(scrapy.Spider):
 
     def parse(self, response):
         country_dict = {}
-
+        #get the infected country table from the site
         table = response.xpath('//table[contains(@class,"table table-bordered table-hover main_table_countries")]')
+        #skip the first row, title row
         trs = table.xpath('.//tr')[1:]
         for tr in trs:
             country = tr.xpath('.//td[1]//text()').extract_first()
