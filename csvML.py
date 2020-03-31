@@ -90,4 +90,16 @@ all_data['Province_State'] = le.fit_transform(all_data['Province_State'])
 number_p = all_data['Province_State']
 province = le.inverse_transform(all_data['Province_State'])
 province_dict = dict(zip(province, number_p))
-print(country_dict)
+
+data = all_data.copy()
+features = ['Id', 'ForecastId', 'Country_Region', 'Province_State', 'ConfirmedCases', 'Fatalities',
+       'Day_num', 'Day', 'Month', 'Year']
+data = data[features]
+# Apply log transformation to all ConfirmedCases and Fatalities columns, except for trends
+data[['ConfirmedCases', 'Fatalities']] = data[['ConfirmedCases', 'Fatalities']].astype('float64')
+data[['ConfirmedCases', 'Fatalities']] = data[['ConfirmedCases', 'Fatalities']].apply(lambda x: np.log(x))
+
+# Replace infinites
+data.replace([np.inf, -np.inf], 0, inplace=True)
+display(data)
+x_train = data[data.ForecastId == -1].drop(['ConfirmedCases', 'Fatalities'], axis=1)
